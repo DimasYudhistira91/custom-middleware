@@ -16,9 +16,26 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/api/foodlist', (req, res) => {
+  res.send(foodlist);
+});
+
 app.get('/api/foodlist/:id', (req,res) => {
   const food = foodlist.find(i => i.id === parseInt(req.params.id));
   if(!food) return res.status(404).send('Ooops, makanan yang anda cari tidak ditemukan');
+  res.send(food);
+});
+
+app.post('/api/foodlist', (req, res) => {
+  const {error} = validasiFood(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const food = {
+    id: foodlist.length + 1,
+    makanan: req.body.makanan
+  };
+
+  foodlist.push(food);
   res.send(food);
 });
 
