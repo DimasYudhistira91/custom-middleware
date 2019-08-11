@@ -39,7 +39,34 @@ app.post('/api/foodlist', (req, res) => {
   res.send(food);
 });
 
+app.put('/api/foodlist/:id', (req, res) => {
+  const food = foodlist.find(i => i.id === parseInt(req.params.id));
+  if(!food) return res.status(404).send('Ooops, makanan yang anda cari tidak ditemukan');
 
+  const {error} = validasiFood(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  food.makanan = req.body.makanan;
+  res.send(food);
+});
+
+app.delete('/api/foodlist/:id', (req, res) => {
+  const food = foodlist.find(i => i.id === parseInt(req.params.id));
+  if(!food) return res.status(404).send('Ooops, makanan yang anda cari tidak ditemukan');
+
+  const index = foodlist.indexOf(food);
+  foodlist.splice(index, 1);
+
+  res.send(food);
+});
+
+function validasiFood(food) {
+  const skema = {
+    makanan: Joi.string().min(3).required()
+  };
+
+  return Joi.validate(food, skema);
+}
 
 
 const port = process.env.PORT || 3800;
