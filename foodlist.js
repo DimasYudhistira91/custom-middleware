@@ -1,15 +1,29 @@
+const morgan = require('morgan');
+const helmet = require('helmet');
 const Joi = require('@hapi/joi');
+const logger = require('./logger');
 const express = require('express');
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(helmet());
+app.use(morgan('tiny'));
+
+app.use(logger);
+
+app.use(function(req, res, next) {
+  console.log('Authenticating...');
+  next();
+});
 
 const foodlist = [
   { id: 1, makanan: 'Ayam goreng' },
   { id: 2, makanan: 'Tempe bacem' },
   { id: 3, makanan: 'Tahu bulat' },
   { id: 4, makanan: 'Mendoan' },
-  { id: 5, makanan: 'Sate Kmabing' }
+  { id: 5, makanan: 'Sate Kambing' }
 ];
 
 app.get('/', (req, res) => {
