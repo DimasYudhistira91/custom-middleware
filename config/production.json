@@ -1,0 +1,6 @@
+{
+    "makanan": "Nasi Goreng - Production",
+    "mail": {
+      "host": "prod-mail-server"
+    }
+  }
